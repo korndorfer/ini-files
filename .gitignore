@@ -26,7 +26,11 @@
 *.a
 *.lib
 
+# Debugging files
+tags.*
+
 # Executables
 *.exe
 *.out
 *.app
+ini-files
