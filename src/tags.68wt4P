@@ -1,0 +1,46 @@
+update	IniFile.cpp	/^int IniFile::update()$/;"	f	class:IniFile
+openFile	IniFile.cpp	/^int IniFile::openFile(char * fileName)$/;"	f	class:IniFile
+readInteger	IniFile.cpp	/^int IniFile::readInteger(char * sectionName, char * name, int defaultValue)$/;"	f	class:IniFile
+readString	IniFile.cpp	/^char * IniFile::readString(char * sectionName, char * name, char * defaultValue)$/;"	f	class:IniFile
+readBoolean	IniFile.cpp	/^bool IniFile::readBoolean(char * sectionName, char * name, bool defaultValue)$/;"	f	class:IniFile
+writeInteger	IniFile.cpp	/^int IniFile::writeInteger(char * sectionName, char * name, int value)$/;"	f	class:IniFile
+writeString	IniFile.cpp	/^int IniFile::writeString(char * sectionName, char * name, char * value)$/;"	f	class:IniFile
+writeBolean	IniFile.cpp	/^int IniFile::writeBolean(char * sectionName, char * name, bool value)$/;"	f	class:IniFile
+closeFile	IniFile.cpp	/^int IniFile::closeFile()$/;"	f	class:IniFile
+setName	ConfigItem.cpp	/^int ConfigItem::setName(const std::string & data)$/;"	f	class:ConfigItem
+getName	ConfigItem.cpp	/^std::string ConfigItem::getName()$/;"	f	class:ConfigItem
+setValue	ConfigItem.cpp	/^int ConfigItem::setValue(const std::string & data)$/;"	f	class:ConfigItem
+getValue	ConfigItem.cpp	/^std::string ConfigItem::getValue()$/;"	f	class:ConfigItem
+setNext	ConfigItem.cpp	/^int ConfigItem::setNext(ConfigItem * item)$/;"	f	class:ConfigItem
+getNext	ConfigItem.cpp	/^ConfigItem * ConfigItem::getNext()$/;"	f	class:ConfigItem
+CONFIG_ITEM_H	ConfigItem.h	23;"	d
+ConfigItem	ConfigItem.h	/^class ConfigItem$/;"	c
+name	ConfigItem.h	/^    std::string name;$/;"	m	class:ConfigItem
+value	ConfigItem.h	/^    std::string value;$/;"	m	class:ConfigItem
+nextConfigItem	ConfigItem.h	/^    ConfigItem * nextConfigItem = nullptr;$/;"	m	class:ConfigItem
+ConfigItem	ConfigItem.h	/^    ConfigItem() = default;$/;"	p	class:ConfigItem
+setName	ConfigItem.h	/^    int setName(const std::string & name);$/;"	p	class:ConfigItem
+getName	ConfigItem.h	/^    std::string getName();$/;"	p	class:ConfigItem
+setValue	ConfigItem.h	/^    int setValue(const std::string & value);$/;"	p	class:ConfigItem
+getValue	ConfigItem.h	/^    std::string getValue();$/;"	p	class:ConfigItem
+setNext	ConfigItem.h	/^    int setNext(ConfigItem * item);$/;"	p	class:ConfigItem
+getNext	ConfigItem.h	/^    ConfigItem * getNext();$/;"	p	class:ConfigItem
+INI_FILE_H	IniFile.h	24;"	d
+SECTION_START	IniFile.h	26;"	d
+SECTION_END	IniFile.h	27;"	d
+VARIABLE_TOKEN	IniFile.h	28;"	d
+IniFile	IniFile.h	/^class IniFile$/;"	c
+fileStream	IniFile.h	/^    std::fstream fileStream;$/;"	m	class:IniFile
+teste	IniFile.h	/^    ConfigItem * teste = nullptr;$/;"	m	class:IniFile
+update	IniFile.h	/^    int update();$/;"	p	class:IniFile
+IniFile	IniFile.h	/^    IniFile() = default;$/;"	p	class:IniFile
+openFile	IniFile.h	/^    int openFile(char * fileName);$/;"	p	class:IniFile
+readInteger	IniFile.h	/^    int readInteger(char * sectionName, char * name, int defaultValue);$/;"	p	class:IniFile
+readString	IniFile.h	/^    char * readString(char * sectionName, char * name, char * defaultValue);$/;"	p	class:IniFile
+readBoolean	IniFile.h	/^    bool readBoolean(char * sectionName, char * name, bool defaultValue);$/;"	p	class:IniFile
+writeInteger	IniFile.h	/^    int writeInteger(char * sectionName, char * name, int value);$/;"	p	class:IniFile
+writeString	IniFile.h	/^    int writeString(char * sectionName, char * name, char * value);$/;"	p	class:IniFile
+writeBolean	IniFile.h	/^    int writeBolean(char * sectionName, char * name, bool value);$/;"	p	class:IniFile
+closeFile	IniFile.h	/^    int closeFile();$/;"	p	class:IniFile
+FILE_NAME	ini-files.cpp	23;"	d	file:
+main	ini-files.cpp	/^int main (int argc, char *argv[])$/;"	f
