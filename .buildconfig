@@ -1,0 +1,10 @@
+[default]
+name=Default
+runtime=host
+config-opts=
+run-opts=
+prefix=/home/korndorfer/.cache/gnome-builder/install/ini-files/host
+app-id=
+postbuild=
+prebuild=
+default=true
