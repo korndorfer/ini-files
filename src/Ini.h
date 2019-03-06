@@ -1,4 +1,4 @@
-/* ConfigItem.h
+/* IniConfig.h
  *
  * Copyright 2019 Israel Cristiano Korndörfer
  *
@@ -16,28 +16,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <iostream>
 #include <string>
 
-#ifndef CONFIG_ITEM_H
-#define CONFIG_ITEM_H
+#ifndef INI_H
+#define INI_H
 
 
-class ConfigItem
+class IniNode
 {
 private:
     std::string name;
-    std::string value;
-    ConfigItem * nextConfigItem = nullptr;
+    IniNode * nextNode = nullptr;
 public:
-    ConfigItem() = default;
+    IniNode(std::string & name) : name(name) {};
+    IniNode() = default;
 
+    bool isName(const std::string & name);
     int setName(const std::string & name);
     std::string getName();
-    int setValue(const std::string & value);
-    std::string getValue();
-    int setNext(ConfigItem * item);
-    ConfigItem * getNext();
+    int setNext(IniNode * node);
+    IniNode * getNext();
 };
 
+
+class IniItem: public IniNode
+{
+private:
+    std::string value;
+public:
+    IniItem(std::string & name, std::string & data) : IniNode(name)
+    {
+        value = data;
+    };
+    IniItem() = default;
+
+    int setValue(const std::string & value);
+    std::string getValue();
+};
+
+class IniSection: public IniNode
+{
+private:
+    IniItem * items = nullptr;
+public:
+    IniSection(std::string & name) : IniNode(name) {};
+
+    IniSection() = default;
+
+    IniItem * setItem(std::string name, std::string value);
+    IniItem * getItem(std::string name);
+    IniItem * setItems(IniItem * data);
+    IniItem * getItems();
+};
+
+bool hasNode(std::string name, IniNode ** node);
+
 #endif
+

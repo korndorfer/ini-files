@@ -28,6 +28,9 @@ int main (int argc, char *argv[])
     IniFile iniFile;
 
     iniFile.openFile((char *) FILE_NAME);
+    std::cout << iniFile.readString((char *) "FTP", (char *) "SUPassword", (char *) "nothing") << std::endl;
+    std::cout << iniFile.readInteger((char *) "FTP", (char *) "FTPDataPort", 23) << std::endl;
+    std::cout << iniFile.readBoolean((char *) "BACKUP_SERVERS", (char *) "CustomFTP", false) << std::endl;
     iniFile.closeFile();
 
     return EXIT_SUCCESS;

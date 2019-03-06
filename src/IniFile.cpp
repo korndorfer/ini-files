@@ -19,61 +19,175 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
+#include <cctype>
+#include <iomanip>
 #include "IniFile.h"
-#include "ConfigItem.h"
+#include "Ini.h"
 
+
+IniSection * IniFile::setSection(std::string name)
+{
+    IniSection * newSection = new IniSection(name);
+
+    if (sections == nullptr)
+    {
+        sections = newSection;
+        return sections;
+    }
+    else if (sections->isName(name))
+    {
+        std::cout << "ERROR: The name "
+                  << name
+                  << " was already in list!"
+                  << std::endl;
+    }
+    else
+    {
+        IniSection * auxSection = sections;
+        while (auxSection->getNext() != nullptr)
+        {
+            if (auxSection->isName(name))
+            {
+                std::cout << "ERROR: The name "
+                          << name
+                          << " was already in list!"
+                          << std::endl;
+            }
+            auxSection = (IniSection *) auxSection->getNext();
+        }
+        auxSection->setNext(newSection);
+    }
+
+    return newSection;
+}
+
+IniSection * IniFile::getSection(std::string name)
+{
+    IniSection * auxSection = sections;
+    if (sections != nullptr && !sections->isName(name))
+    {
+        while (auxSection->getNext() != nullptr)
+        {
+            if (auxSection->isName(name))
+            {
+                break;
+            }
+            else
+            {
+                auxSection = (IniSection *) auxSection->getNext();
+            }
+        }
+    }
+
+    return auxSection;
+}
 
 // Update
 int IniFile::update()
 {
-    ConfigItem * aux = nullptr;
+    IniSection * section = nullptr;
     std::string line;
-    std::size_t token_position;
+    std::size_t start_position = 0;
+    std::size_t final_position = 0;
+    std::size_t token_position = 0;
 
-    while (fileStream >> line) {
-        if (line.front() == SECTION_START && line.back() == SECTION_END)
+    while (std::getline(fileStream, line)) {
+        start_position = line.find(SECTION_START);
+        final_position = line.find(SECTION_END);
+        if (start_position != std::string::npos &&
+            final_position != std::string::npos)
         {
-            if (teste == nullptr)
-            {
-                teste = new ConfigItem();
-                teste->setName(line.substr(1, line.length()-2));
-            }
-            else
-            {
-                aux = teste;
-                while (aux->getNext() != nullptr)
-                {
-                    aux = aux->getNext();
-                }
-                ConfigItem * newConfigItem = new ConfigItem();
-                newConfigItem->setName(line.substr(1, line.length()-2));
-                aux->setNext(newConfigItem);
-            }
-
-            continue;
+            final_position = final_position - start_position - 1;
+            start_position = start_position + 1;
+            section = setSection(line.substr(start_position, final_position));
         }
-        token_position = line.find(VARIABLE_TOKEN);
-        if (token_position!=std::string::npos)
+        else
         {
-            std::cout << '\t' << line.substr(0, token_position);
-            std::cout << '\t' << line.substr(token_position+1, line.length()) << std::endl;
+            token_position = line.find(VARIABLE_TOKEN);
+            if (token_position != std::string::npos)
+            {
+                if (section != nullptr)
+                {
+                    section->setItem(line.substr(0, token_position),
+                                     line.substr(token_position+1,
+                                                 line.length()));
+                }
+                else
+                {
+                    std::cout << "ERROR: Item "
+                              << line
+                              << " without section!"
+                              << std::endl;
+                }
+            }
         }
     }
-    aux = teste;
-    do
-    {
-        std::cout << aux->getName() << std::endl;
-        aux = aux->getNext();
-    } while (aux->getNext() != nullptr);
-    std::cout << aux->getName() << std::endl;
 
     return 0;
 }
 
-// Open a file called <file_name>
+void IniFile::listSections()
+{
+    IniSection * aux = nullptr;
+    IniItem * auxItem = nullptr;
+
+    if (sections != nullptr)
+    {
+        aux = sections;
+        while (aux->getNext() != nullptr)
+        {
+            std::cout << aux->getName() << std::endl;
+            if (aux->getItems() != nullptr)
+            {
+                auxItem = aux->getItems();
+                while (auxItem->getNext() != nullptr)
+                {
+                    std::cout << '\t'
+                              << std::setw(21)
+                              << std::left
+                              << auxItem->getName()
+                              << auxItem->getValue() << std::endl;
+
+                    auxItem = (IniItem *) auxItem->getNext();
+                }
+                std::cout << '\t'
+                          << std::setw(21)
+                          << std::left
+                          << auxItem->getName()
+                          << auxItem->getValue() << std::endl;
+            }
+
+            aux = (IniSection *) aux->getNext();
+        }
+
+        std::cout << aux->getName() << std::endl;
+        if (aux->getItems() != nullptr)
+        {
+            auxItem = aux->getItems();
+            while (auxItem->getNext() != nullptr)
+            {
+                std::cout << '\t'
+                          << std::setw(21)
+                          << std::left
+                          << auxItem->getName()
+                          << auxItem->getValue() << std::endl;
+
+                auxItem = (IniItem *) auxItem->getNext();
+            }
+            std::cout << '\t'
+                      << std::setw(21)
+                      << std::left
+                      << auxItem->getName()
+                      << auxItem->getValue() << std::endl;
+        }
+    }
+}
+
+// Open a file called <fileName>
 int IniFile::openFile(char * fileName)
 {
-    fileStream.open(fileName, std::ios::in | std::ios::out);
+    fileStream.open(fileName);
 
     if (!fileStream.is_open())
     {
@@ -90,19 +204,64 @@ int IniFile::openFile(char * fileName)
 //
 int IniFile::readInteger(char * sectionName, char * name, int defaultValue)
 {
-    return 0;
+    IniSection * section = getSection(sectionName);
+    IniItem * item = section->getItem(name);
+
+    if (item != nullptr)
+    {
+        return std::stoi(item->getValue());
+    }
+    else
+    {
+        return defaultValue;
+    }
 }
 
 //
 char * IniFile::readString(char * sectionName, char * name, char * defaultValue)
 {
-    return 0;
+    IniSection * section = getSection(sectionName);
+    IniItem * item = section->getItem(name);
+
+    if (item != nullptr)
+    {
+        std::string value = item->getValue();
+        char * result = new char[value.length()+1];
+        std::strcpy(result, value.c_str());
+        return result;
+    }
+    else
+    {
+        return defaultValue;
+    }
 }
 
 //
 bool IniFile::readBoolean(char * sectionName, char * name, bool defaultValue)
 {
-    return 0;
+    IniSection * section = getSection(sectionName);
+    IniItem * item = section->getItem(name);
+
+    if (item != nullptr)
+    {
+        int index = 0;
+        std::string value = item->getValue();
+        std::string result = value;
+        for (index = 0; index < value.length(); index ++)
+        {
+            result[index] = std::tolower(value[index]);
+        }
+        if (result == "true" || result == "1")
+        {
+            return true;
+        }
+        else if (result == "false" || result == "0")
+        {
+            return false;
+        }
+    }
+
+    return defaultValue;
 }
 
 //

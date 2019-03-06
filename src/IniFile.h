@@ -18,7 +18,7 @@
 
 #include <iostream>
 #include <fstream>
-#include "ConfigItem.h"
+#include "Ini.h"
 
 #ifndef INI_FILE_H
 #define INI_FILE_H
@@ -32,9 +32,14 @@ class IniFile
 {
 private:
     std::fstream fileStream;
-    ConfigItem * teste = nullptr;
+    IniSection * sections = nullptr;
+    IniItem * teste = nullptr;
 
+    IniSection * setSection(std::string name);
+    IniSection * getSection(std::string name);
     int update();
+    // only for test
+    void listSections();
 
 public:
     IniFile() = default;
